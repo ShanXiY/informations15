@@ -39,13 +39,17 @@ def create_app(config_name):
     Session(app)
 
     # 保护app，使用CSRFProtect
-    CSRFProtect(app)
+    # CSRFProtect(app)
 
     #注册首页蓝图index_blue,到app中
     from info.modules.index import index_blue
     app.register_blueprint(index_blue)
-    print(app.url_map)
 
+    # 注册认证蓝图passport_blue到app中
+    from info.modules.passport import passport_blue
+    app.register_blueprint(passport_blue)
+
+    print(app.url_map)
     return app
 
 # 记录日志信息的方法

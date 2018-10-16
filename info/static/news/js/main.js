@@ -124,7 +124,7 @@ $(function(){
             "mobile":mobile,
             "password":password
         }
-        /*
+
         $.ajax({
             url:'/passport/login',
             type:'post',
@@ -141,7 +141,7 @@ $(function(){
 
             }
         })
-        */
+
     })
 
 
@@ -182,7 +182,7 @@ $(function(){
             "sms_code":smscode,
             "password":password
         }
-        /*
+
         $.ajax({
             url:'/passport/register',
             type:'post',
@@ -199,22 +199,22 @@ $(function(){
                 }
             }
         })
-        */
+
     })
 })
 
 //退出登陆
 function logout() {
-    /*
+
     $.ajax({
         url:'/passport/logout',
         type:'post',
-        headers:{'X-CSRFToken':getCookie('csrf_token')},
+        // headers:{'X-CSRFToken':getCookie('csrf_token')},
         success:function (resp) {
             window.location.reload()
         }
     })
-    */
+
 }
 
 
@@ -224,7 +224,7 @@ var preimageCodeId = ""
 // TODO 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
 function generateImageCode() {
 
-    /*
+
     //1.生成一个随机字符串
     imageCodeId = generateUUID();
 
@@ -236,7 +236,7 @@ function generateImageCode() {
 
     //4.记录上一次的编号
     preimageCodeId = imageCodeId
-    */
+
 }
 
 // 发送短信验证码
@@ -268,13 +268,12 @@ function sendSMSCode() {
     }
 
     //发送获取短信请求
-    /*
     $.ajax({
         url:'/passport/sms_code',//请求地址
         type:'post',
         data:JSON.stringify(params),
         contentType:'application/json',
-        headers:{'X-CSRFToken':getCookie('csrf_token')},
+        // headers:{'X-CSRFToken':getCookie('csrf_token')},
         success: function (resp) {
             //判断是否请求成功
             if(resp.errno == '0'){
@@ -309,7 +308,6 @@ function sendSMSCode() {
             }
         }
     })
-    */
 }
 
 // 调用该函数模拟点击左侧按钮
