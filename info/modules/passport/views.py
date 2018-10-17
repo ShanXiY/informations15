@@ -1,6 +1,7 @@
 import random
 import re
 
+from datetime import datetime
 from flask import current_app
 from flask import json
 from flask import make_response
@@ -26,7 +27,7 @@ def logout():
     # 清除session
     session.pop("user_id",None)
     session.pop("nick_name",None)
-    session.pop("password",None)
+    session.pop("mobile",None)
 
     # 返回响应
     return jsonify(errno=RET.OK,errmsg="退出成功")
@@ -76,6 +77,14 @@ def login():
     session["user_id"] = user.id
     session["nick_name"] = user.nick_name
     session["mobile"] = user.mobile
+
+    # 6.1记录用户最后一次的登陆时间
+    user.last_login = datetime.now()
+    try:
+        db.session.commit()
+    except Exception as e:
+         current_app.logger.error(e)
+
     # 7.返回响应
     return jsonify(errno=RET.OK,errmsg="登陆成功")
 
@@ -215,6 +224,9 @@ def sms_code():
 
     # 8.生成短信验证码
     sms_code = "%06d"%random.randint(0,999999)
+
+
+
 
     # 9.发送短信验证码，调用ccp方法
     ccp = CCP()
