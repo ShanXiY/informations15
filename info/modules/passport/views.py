@@ -70,7 +70,8 @@ def login():
         return jsonify(errno=RET.NODATA,errmsg="用户不存在")
 
     # 5.校验用户密码是否正确
-    if user.password_hash != password:
+    # if user.password_hash != password:
+    if not user.check_passowrd(password):
         return jsonify(errno=RET.DATAERR,errmsg="密码错误")
 
     # 6.保存用户的登陆状态到session
@@ -150,7 +151,9 @@ def register():
     # 8.创建用户对象，设置属性
     user = User()
     user.nick_name = mobile
-    user.password_hash = password
+    # user.password_hash = password
+    # user.password_hash = password(password) 需要加密处理
+    user.password = password
     user.mobile = mobile
 
     # 9.保存用户到数据库mysql
@@ -224,19 +227,19 @@ def sms_code():
 
     # 8.生成短信验证码
     sms_code = "%06d"%random.randint(0,999999)
-
+    current_app.logger.debug("短信验证码：%s"%sms_code)
 
 
 
     # 9.发送短信验证码，调用ccp方法
-    ccp = CCP()
-    try:
-        result = ccp.send_template_sms(mobile,[sms_code,constants.SMS_CODE_REDIS_EXPIRES/60],1)
-    except Exception as e:
-        current_app.logger.error(e)
-        return jsonify(errno=RET.THIRDERR,errmsg="云通讯发送异常")
-    if result == -1:
-        return jsonify(errno=RET.DATAERR,errmsg="短信发送失败")
+    # ccp = CCP()
+    # try:
+    #     result = ccp.send_template_sms(mobile,[sms_code,constants.SMS_CODE_REDIS_EXPIRES/60],1)
+    # except Exception as e:
+    #     current_app.logger.error(e)
+    #     return jsonify(errno=RET.THIRDERR,errmsg="云通讯发送异常")
+    # if result == -1:
+    #     return jsonify(errno=RET.DATAERR,errmsg="短信发送失败")
 
     # 10.存储短信验证码到redis中
     try:
