@@ -5,11 +5,80 @@ from flask import json
 from flask import request
 
 from info import db
-from info.models import News, Comment, CommentLike
+from info.models import News, Comment, CommentLike, User
 from info.utils.common import user_login_data
 from info.utils.response_code import RET
 from . import news_blue
 from flask import render_template
+
+# 功能描述：关注&取消关注
+# 请求路径：/news/followed_user
+# 请求方式：POST
+# 请求参数：user_id,action
+# 返回值：errno，errmsg
+@news_blue.route('/followed_user', methods=['POST'])
+@user_login_data
+def followed_user():
+    """
+    1.判断用户是否登陆
+    2.获取参数
+    3.校验参数，为空校验
+    4.判断操作类型
+    5.根据作者编号取出作者对象，判断作者对象是否存在
+    6.根据操作类型，关注&取消关注
+    7.返回响应
+    :return:
+    """
+
+
+    # 1.判断用户是否登陆
+    if not g.user:
+        return jsonify(errno=RET.NODATA,errmsg="用户未登录")
+
+    # 2.获取参数
+    user_id = request.json.get("user_id")
+    action = request.json.get("action")
+
+    # 3.校验参数，为空校验
+    if not all([user_id,action]):
+        return jsonify(errno=RET.PARAMERR,errmsg="参数不全")
+
+    # 4.判断操作类型
+    if not action in ["follow","unfollow"]:
+        return jsonify(errno=RET.DATAERR,errmsg="操作类型有误")
+
+    # 5.根据作者编号取出作者对象，判断作者对象是否存在
+    try:
+        author = User.query.get(user_id)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR,errmsg="获取用户失败")
+
+    if not author:
+        return jsonify(errno=RET.NODATA,errmsg="用户不存在")
+
+
+
+    try:
+        # 6.根据操作类型，关注&取消关注
+        if action == "follow":
+            # 判断用户是否已经关注过该作者了
+            if not g.user in author.followers:
+                author.followers.append(g.user)
+        else:
+            # 判断用户是否已经关注过该作者了
+            if g.user in author.followers:
+                author.followers.remove(g.user)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR, errmsg="操作异常")
+
+    # 7.返回响应
+
+
+    return jsonify(errno=RET.OK, errmsg="操作成功")
+
+
 
 # 功能描述：点赞
 # 请求路径：/news/comment_like
@@ -307,13 +376,21 @@ def news_detail(news_id):
 
         comments_list.append(com_dict)
 
+    # 判断当前用户是否有关注当前新闻的作者
+    is_followed = False
+    if g.user and news.user:
+        if g.user in news.user.followers:
+            is_followed = True
+
+
     # 携带数据渲染页面
     data ={
         "news":news.to_dict(),
         "click_news_list":click_news_list,
         "user_info": g.user.to_dict() if g.user else "",
         "is_collected":is_collected,
-        "comments":comments_list
+        "comments":comments_list,
+        "is_followed":is_followed
     }
 
     return render_template("news/detail.html",data=data)

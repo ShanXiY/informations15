@@ -59,10 +59,6 @@
             </div>
         {% endif %}
 
-
-
-
-
         <div class="comment_count">
             {{ data.news.comments_count }}条评论
         </div>
@@ -201,51 +197,62 @@
 
         </div>
 {% endblock %}
-{% block rankBlock %}
-    <div class="rank_con fr">
-            <div class="author_card">
-                <a href="#" class="author_pic"><img src="../../static/news/images/user_pic.png" alt="author_pic"></a>
-                <a href="#" class="author_name">张大山</a>
-                <div class="author_resume">张大山的简介,张大山</div>
-                <div class="writings"><span>总篇数</span><b>23</b></div>
-                <div class="follows"><span>粉丝</span><b>36</b></div>
-                <a href="javascript:;" class="focus fr">关注</a>
-                <a href="javascript:;" class="focused fr"><span class="out">已关注</span><span class="over">取消关注</span></a>
-            </div>
-            <div class="rank_title">
-                <h3>点击排行</h3>
-            </div>
-            <ul class="rank_list">
-                {% for news in data.click_news_list %}
-                   <li><span class="{{ loop.index | index_class }}">{{ loop.index }}</span><a href="#">{{ news.title }}</a></li>
-                {% endfor %}
 
 
+{#{% block rankBlock %}#}
+{#    <div class="rank_con fr">#}
+{#            <div class="author_card">#}
+{#                <a href="#" class="author_pic"><img src="../../static/news/images/user_pic.png" alt="author_pic"></a>#}
+{#                <a href="#" class="author_name">张大山</a>#}
+{#                <div class="author_resume">张大山的简介,张大山</div>#}
+{#                <div class="writings"><span>总篇数</span><b>23</b></div>#}
+{#                <div class="follows"><span>粉丝</span><b>36</b></div>#}
+{#                <a href="javascript:;" class="focus fr">关注</a>#}
+{#                <a href="javascript:;" class="focused fr"><span class="out">已关注</span><span class="over">取消关注</span></a>#}
+{#            </div>#}
+{#            <div class="rank_title">#}
+{#                <h3>点击排行</h3>#}
+{#            </div>#}
+{#            <ul class="rank_list">#}
+{#                {% for news in data.click_news_list %}#}
+{#                   <li><span class="{{ loop.index | index_class }}">{{ loop.index }}</span><a href="#">{{ news.title }}</a></li>#}
+{#                {% endfor %}#}
+{##}
+{##}
 {#                <li><span class="first">1</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>#}
 {#                <li><span class="second">2</span><a href="#">凛冬已至，还有多少银行人在假装干银行</a></li>#}
 {#                <li><span class="third">3</span><a href="#">人民日报：部分城市楼市放松限制引关注，楼市调控不会“拉抽屉”</a></li>#}
 {#                <li><span>4</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>#}
 {#                <li><span>5</span><a href="#">凛冬已至，还有多少银行人在假装干银行</a></li>#}
 {#                <li><span>6</span><a href="#">人民日报：部分城市楼市放松限制引关注，楼市调控不会“拉抽屉”</a></li>#}
+{##}
+{#            </ul>#}
+{##}
+{#        </div>#}
+{#{% endblock %}#}
 
-            </ul>
 
-        </div>
-{% endblock %}
- 作者部分
+{# 作者部分 #}
 {% block authorBlock %}
 
-     判断是否有作者
+     {# 判断是否有作者 #}
     {% if data.news.author %}
         <div class="author_card">
+            {% if data.news.author.avatar_url %}
+                <a href="#" class="author_pic"><img src="{{ data.news.author.avatar_url }}" alt="author_pic"></a>
+            {% else %}
                 <a href="#" class="author_pic"><img src="../../static/news/images/user_pic.png" alt="author_pic"></a>
-                <a href="#" class="author_name">张大山</a>
-                <div class="author_resume">张大山的简介,张大山</div>
-                <div class="writings"><span>总篇数</span><b>23</b></div>
-                <div class="follows"><span>粉丝</span><b>36</b></div>
-                <a href="javascript:;" class="focus fr">关注</a>
-                <a href="javascript:;" class="focused fr"><span class="out">已关注</span><span class="over">取消关注</span></a>
-        </div>{% endif %}
+            {% endif %}
+
+            <a href="/user/other?id={{ data.news.author.id }}" class="author_name">{{ data.news.author.nick_name }}</a>
+            <div class="author_resume">{{ data.news.author.signature }}</div>
+            <div class="writings"><span>总篇数</span><b>{{ data.news.author.news_count }}</b></div>
+            <div class="follows"><span>粉丝</span><b>{{ data.news.author.followers_count }}</b></div>
+
+            <a href="javascript:;" class="focus fr" data-userid="{{ data.news.author.id }}" style="display: {% if data.is_followed %} none{% else %} block {% endif %}">关注</a>
+            <a href="javascript:;" class="focused fr"  data-userid="{{ data.news.author.id }}" style="display: {% if data.is_followed %} block{% else %} none {% endif %}"><span class="out">已关注</span><span class="over">取消关注</span></a>
+        </div>
+    {% endif %}
         <div class="rank_title">
                 <h3>点击排行</h3>
             </div>

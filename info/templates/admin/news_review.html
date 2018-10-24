@@ -3,17 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>新经资讯后台管理</title>
-	<link rel="stylesheet" type="text/css" href="../css/reset.css">
-	<link rel="stylesheet" type="text/css" href="../css/main.css">
-	<link rel="stylesheet" href="../css/jquery.pagination.css">
-	<script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
-	<script type="text/javascript" src="../js/jquery.pagination.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../static/admin/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../../static/admin/css/main.css">
+	<link rel="stylesheet" href="../../static/admin/css/jquery.pagination.css">
+	<script type="text/javascript" src="../../static/admin/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="../../static/admin/js/jquery.pagination.min.js"></script>
 </head>
 <body>
 	<div class="breadcrub">
 			当前位置：新闻管理>新闻审核
 			<form class="news_filter_form">
-				<input type="text" placeholder="请输入关键字" class="input_txt">
+				<input type="text" placeholder="请输入关键字" class="input_txt" name="keywords">
 				<input type="submit" value="搜 索" class="input_sub">
 			</form>
 		</div>
@@ -26,13 +26,33 @@
 					<th width="5%">状态</th>
 					<th width="8%">管理操作</th>
 				</tr>
+
+                {% for news in data.news_list %}
+                    <tr>
+                        <td>{{ news.id }}</td>
+                        <td class="tleft">{{ news.title }}</td>
+                        <td>{{ news.create_time }}</td>
+                        {% if news.status == 1 %}
+                            <td>待审核</td>
+                        {% else %}
+                            <td>未通过</td>
+                        {% endif %}
+
+                        <td>
+                            <a href="/admin/news_review_detail?news_id={{ news.id }}" class="review">审核</a>
+                        </td>
+				    </tr>
+                {% endfor %}
+
+
+                {#
 				<tr>
 					<td>1</td>
 					<td class="tleft">日本史上最大IPO之一要来了：软银计划将手机业务分拆上市</td>
 					<td>2018-3-5 21:39:05</td>
 					<td>已通过</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -41,7 +61,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未通过</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -50,7 +70,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未审核</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -59,7 +79,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>已通过</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -68,7 +88,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未通过</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -77,7 +97,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未审核</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -86,7 +106,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>已通过</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -95,7 +115,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未通过</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -104,7 +124,7 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未审核</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
 				</tr>
 				<tr>
@@ -113,9 +133,10 @@
 					<td>2018-3-5 21:39:05</td>
 					<td>未审核</td>
 					<td>
-						<a href="news_review_detail.html" class="review">审核</a>
+						<a href="../../static/admin/html/news_review_detail.html" class="review">审核</a>
 					</td>
-				</tr>			
+				</tr>
+                 #}
 			</table>
 		</div>
 
@@ -126,10 +147,11 @@
         <script>
 			$(function() {
 				$("#pagination").pagination({
-					currentPage: 2,
-					totalPage: 3,
+					currentPage: {{ data.currentPage }},
+					totalPage: {{ data.totalPage }},
 					callback: function(current) {
-					    alert('ok!');
+{#					    alert('ok!');#}
+                    window.location.href = "/admin/news_review?p="+current
 					}
 				});
 			});
