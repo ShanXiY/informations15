@@ -85,7 +85,7 @@
                 <ul class="rank_list">
                     {# 遍历获取新闻列表 #}
                     {% for news in data.click_news_list %}
-                       <li><span class="{{ loop.index | index_class }}">{{ loop.index }}</span><a href="#">{{ news.title }}</a></li>
+                       <li><span class="{{ loop.index | index_class }}">{{ loop.index }}</span><a href="/news/{{ news.id }}">{{ news.title }}</a></li>
                     {% endfor %}
 
     {#                <li><span class="first">1</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>#}
